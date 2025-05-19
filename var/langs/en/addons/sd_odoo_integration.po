@@ -36,6 +36,10 @@ msgctxt "Languages::sd_odoo_integration.odoo_product_id"
 msgid "Odoo product id (variants)"
 msgstr "Odoo product id (variants)"
 
+msgctxt "Languages::sd_odoo_integration.odoo_product_name"
+msgid "Original Odoo product name"
+msgstr "Original Odoo product name"
+
 msgctxt "Languages::sd_odoo_integration.import_all_product_from_odoo"
 msgid "Import of all products from Odoo"
 msgstr "Import of all products from Odoo"
@@ -259,3 +263,12 @@ msgstr "Odoo Pricelist Name"
 msgctxt "Languages::sd_odoo_integration.add_mapping_row"
 msgid "Add mapping row"
 msgstr "Add mapping row"
+
+msgctxt "Languages::odoo_product_name"
+msgid "Odoo Product Name"
+msgstr "Odoo Product Name"
+
+msgctxt "Languages::odoo_product_name_hint"
+msgid "This name was imported from Odoo and cannot be edited"
+msgstr "This name was imported from Odoo and cannot be edited"
+

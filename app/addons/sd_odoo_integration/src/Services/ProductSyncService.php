@@ -76,7 +76,12 @@ class ProductSyncService
                 $add_products = $update_products = [];
                 if (!empty($products_data)) {
                     $products_data_map = array_map(function ($v) use ($product_fields_mapping) {
-                        return array_combine($product_fields_mapping, $v);
+                        $data = array_combine($product_fields_mapping, $v);
+                        if (isset($data['product'])) {
+                            $data['odoo_product_name'] = $data['product'];
+                        }
+
+                        return $data;
                     }, $products_data);
                     list($add_products, $update_products) = Helpers::splitProductsForUpdateAndAdd($products_data_map, $this->company_id);
                 }
@@ -117,6 +122,12 @@ class ProductSyncService
                 }
                 if (!empty($update_products)) {
                     foreach ($update_products as $u_product) {
+                        if (isset($u_product['product'])) {
+                            unset($u_product['product']);
+                        }
+                        if (isset($u_product['odoo_product_name'])) {
+                            unset($u_product['odoo_product_name']);
+                        }
                         if (!empty($u_product['product_template_attribute_value_ids'])) {
                             $attribute_data = $current_connection->execute('product.template.attribute.value', 'read', [$u_product['product_template_attribute_value_ids']]);
                             $u_product['product_features'] = self::syncAttribute($attribute_data);

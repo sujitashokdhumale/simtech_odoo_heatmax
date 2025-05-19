@@ -83,6 +83,7 @@
         <item for="install">ALTER TABLE ?:companies ADD odoo_shipment_method_id mediumint(8) unsigned NOT NULL default '0'</item>
         <item for="install">ALTER TABLE ?:companies ADD odoo_pricelist_mapping text</item>
         <item for="install">ALTER TABLE ?:products ADD odoo_product_id mediumint(8) unsigned NOT NULL default '0'</item>
+        <item for="install">ALTER TABLE ?:products ADD odoo_product_name varchar(255) NOT NULL default ''</item>
         <item for="install">ALTER TABLE ?:orders ADD odoo_order_id mediumint(8) unsigned NOT NULL default '0'</item>
         <item for="install">CREATE INDEX idx_odoo_order_id ON ?:orders (odoo_order_id);</item>
         <item for="uninstall">ALTER TABLE ?:companies DROP COLUMN odoo_url</item>
@@ -94,6 +95,7 @@
         <item for="uninstall">ALTER TABLE ?:companies DROP COLUMN odoo_shipment_method_id</item>
         <item for="uninstall">ALTER TABLE ?:companies DROP COLUMN odoo_pricelist_mapping</item>
         <item for="uninstall">ALTER TABLE ?:products DROP COLUMN odoo_product_id</item>
+        <item for="uninstall">ALTER TABLE ?:products DROP COLUMN odoo_product_name</item>
         <item for="uninstall">ALTER TABLE ?:orders DROP COLUMN odoo_order_id</item>
         <item for="uninstall">DROP INDEX idx_odoo_order_id ON ?:orders;</item>
     </queries>
