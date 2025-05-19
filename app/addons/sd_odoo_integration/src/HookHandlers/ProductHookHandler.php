@@ -13,6 +13,8 @@ namespace Tygh\Addons\SdOdooIntegration\HookHandlers;
 use Tygh\Addons\SdOdooIntegration\Exceptions\OdooException;
 use Tygh\Application;
 use Tygh\Registry;
+use Tygh\Settings;
+use Tygh\Enum\YesNo;
 use Tygh\Tygh;
 
 /**
@@ -60,6 +62,12 @@ class ProductHookHandler
     public function deleteProductPost(int $product_id, bool $product_deleted): void
     {
         if (!$product_deleted) {
+            return;
+        }
+
+        $settings = Settings::instance()->getValues('sd_odoo_integration', 'ADDON');
+        $allow_delete = $settings['general']['allow_delete_product_odoo'] ?? YesNo::NO;
+        if ($allow_delete !== YesNo::YES) {
             return;
         }
 
