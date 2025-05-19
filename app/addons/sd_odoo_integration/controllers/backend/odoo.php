@@ -106,9 +106,9 @@ if ($mode == 'import') {
         fn_log_event('general', 'runtime', [
             'message' => __('sd_odoo_integration.successfully_completed'),
         ]);
-
-        return [CONTROLLER_STATUS_NO_CONTENT];
     }
+
+    return [CONTROLLER_STATUS_NO_CONTENT];
 } elseif ($mode == 'deleting') {
     if (
         !isset($_REQUEST['cron_password']) || empty($_REQUEST['cron_password']) ||
