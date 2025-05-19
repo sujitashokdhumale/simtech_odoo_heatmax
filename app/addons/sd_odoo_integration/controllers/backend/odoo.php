@@ -35,29 +35,12 @@ if ($mode == 'import') {
     $companies = Helpers::getCompaniesForImport();
     $default_category = Helpers::getDefaultCategorySettings();
     if (empty($default_category)) {
-        $msg = __('sd_odoo_integration.cron_odoo_empty_default_category');
         fn_log_event('general', 'runtime', [
-            'message' => $msg,
+            'message' => 'Default category not configured.',
         ]);
-        /** @var \Tygh\NotificationsCenter\NotificationsCenter $notifications_center */
-        $notifications_center = Tygh::$app['notifications_center'];
-        $force_notification = [
-            UserTypes::ADMIN => true,
-        ];
-        $notifications_center->add([
-            'user_id' => 1,
-            'title' => $msg,
-            'message' => $msg,
-            'severity' => NotificationSeverity::INFO,
-            'area' => SiteArea::ADMIN_PANEL,
-            'section' => NotificationsCenter::SECTION_ADMINISTRATION,
-            'tag' => NotificationsCenter::TAG_OTHER,
-            'language_code' => Registry::get('settings.Appearance.backend_default_language'),
-            'pinned' => true,
-            'remind' => false,
-        ]);
+        fn_set_notification('E', __('error'), 'Default category not configured.');
 
-        return [CONTROLLER_STATUS_NO_CONTENT];
+        return [CONTROLLER_STATUS_OK];
     }
     $start_time = time();
     foreach ($companies as $company) {
