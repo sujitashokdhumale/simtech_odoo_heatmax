@@ -193,17 +193,26 @@ if ($mode == 'import') {
     }
 } elseif ($mode == 'check_connect') {
     if (defined('AJAX_REQUEST')) {
-        $current_connection = Tygh::$app['addons.sd_odoo_integration.odoo_connect']->getConnection($_REQUEST['company_id']);
-        if ($current_connection) {
-            $uid = $current_connection->getUid();
-            if (is_numeric($uid)) {
-                Tygh::$app['view']->assign('checking_result', __('OK'));
+        try {
+            $current_connection = Tygh::$app['addons.sd_odoo_integration.odoo_connect']->getConnection($_REQUEST['company_id']);
+
+            if ($current_connection) {
+                $uid = $current_connection->getUid();
+                if (is_numeric($uid)) {
+                    Tygh::$app['view']->assign('checking_result', __('OK'));
+                } else {
+                    Tygh::$app['view']->assign('checking_result', __('sd_odoo_integration.failed_connection'));
+                }
             } else {
                 Tygh::$app['view']->assign('checking_result', __('sd_odoo_integration.failed_connection'));
             }
-        } else {
+        } catch (Exception $e) {
+            fn_log_event('general', 'runtime', [
+                'message' => 'Odoo connection test failed: ' . $e->getMessage()
+            ]);
             Tygh::$app['view']->assign('checking_result', __('sd_odoo_integration.failed_connection'));
         }
+
         Tygh::$app['view']->display('addons/sd_odoo_integration/views/manage_cron.tpl');
         return [CONTROLLER_STATUS_NO_CONTENT];
     }
