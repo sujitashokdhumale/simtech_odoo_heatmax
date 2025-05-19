@@ -18,7 +18,10 @@ $schema = [
     'partner_shipping_id',
     'order_line',
     'display_name',
+    'invoice_status',
+    'payment_state',
     'picking_ids',
+    'write_date',
 ];
 
 return $schema;

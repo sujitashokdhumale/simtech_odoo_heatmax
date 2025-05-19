@@ -18,6 +18,7 @@ use Tygh\Enum\Addons\SdOdooIntegration\OdooEntities;
 use Tygh\Enum\Addons\SdOdooIntegration\OdooOrderStatuses;
 use Tygh\Enum\YesNo;
 use Tygh\Registry;
+use Tygh\Settings;
 use Tygh\Tygh;
 
 /**
@@ -32,6 +33,7 @@ class OrderSyncService
     protected $last_launch;
     protected $start_time;
     protected $odoo_default_discount_product;
+    protected $import_new_orders;
 
     /**
      * Orders sync constructor.
@@ -43,6 +45,8 @@ class OrderSyncService
         $this->last_launch = $this->odoo_cron->last_launch;
         $this->start_time = $start_time;
         $this->odoo_default_discount_product = $company['odoo_discount_product'];
+        $settings = Settings::instance()->getValues('sd_odoo_integration', 'ADDON');
+        $this->import_new_orders = $settings['general']['import_new_odoo_orders'] ?? YesNo::YES;
     }
 
     /**
@@ -93,9 +97,14 @@ class OrderSyncService
                     ['fields' => $orders_fields]
                 );
                 foreach ($orders_data as $item) {
-                    if (self::issetOrderInCscart($item['id'], $this->company_id)) {
+                    $order_exists = self::issetOrderInCscart($item['id'], $this->company_id);
+                    if ($order_exists) {
                         fn_define('IMPORT_ORDER_ODOO', false);
+                        $this->updateOrderInCscart($item);
                         ++$orders_count_check;
+                        continue;
+                    }
+                    if ($this->import_new_orders === YesNo::NO) {
                         continue;
                     }
                     fn_define('IMPORT_ORDER_ODOO', true);
@@ -364,6 +373,93 @@ class OrderSyncService
         }
 
         return $update_order_id ?? false;
+    }
+
+    /**
+     * Update order in CS-Cart by data from Odoo.
+     *
+     * @param array $odoo_order
+     *
+     * @return bool
+     */
+    public function updateOrderInCscart(array $odoo_order)
+    {
+        $order_id_data = self::issetOrderInCscart($odoo_order['id'], $this->company_id);
+        $order_id = is_array($order_id_data) ? reset($order_id_data) : $order_id_data;
+
+        if (!$order_id) {
+            return false;
+        }
+
+        $status = $this->getStatusByOdooOrderStatus($odoo_order['state']);
+        if ($status) {
+            fn_change_order_status($order_id, $status, '', fn_get_notification_rules([], true));
+        }
+
+        if (!empty($odoo_order['payment_state'])) {
+            db_query('UPDATE ?:orders SET payment_state = ?s WHERE order_id = ?i', $odoo_order['payment_state'], $order_id);
+        }
+
+        if (!empty($odoo_order['picking_ids'])) {
+            $current_connection = Tygh::$app['addons.sd_odoo_integration.odoo_connect']->getConnection($this->company_id);
+            if ($current_connection) {
+                $fields_transfers = fn_get_schema('odoo', 'transfer_fields');
+                $transfers_data = $current_connection->execute('stock.picking', 'read', [$odoo_order['picking_ids']], ['fields' => $fields_transfers]);
+                $force_notification = fn_get_notification_rules([], true);
+                foreach ($transfers_data as $transfer) {
+                    $date = !empty($transfer['date_done']) ? fn_date_to_timestamp($transfer['date_done']) : fn_date_to_timestamp($transfer['date']);
+                    $params = ['order_id' => $order_id, 'advanced_info' => false];
+                    list($shipments,) = fn_get_shipments_info($params);
+                    $shipment = reset($shipments);
+                    $shipment_status = $this->getStatusByOdooTransferStatus($transfer['state']);
+                    if (empty($shipment)) {
+                        $shipment_data = [
+                            'timestamp' => $date,
+                            'order_id' => $order_id,
+                            'shipping_id' => Helpers::getDefaultShippingForImport($this->company_id),
+                            'tracking_number' => $transfer['id'],
+                            'status' => $shipment_status,
+                        ];
+                        fn_update_shipment($shipment_data, 0, 0, true, $force_notification);
+                    } else {
+                        $shipment['status'] = $shipment_status;
+                        $shipment['timestamp'] = $date;
+                        fn_update_shipment($shipment, $shipment['shipment_id']);
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get order status by odoo order status.
+     *
+     * @param string $status_from_odoo
+     *
+     * @return string|null
+     */
+    protected function getStatusByOdooOrderStatus($status_from_odoo)
+    {
+        return db_get_field('SELECT statuses.status FROM ?:statuses AS statuses'
+            . ' LEFT JOIN ?:status_data AS data ON statuses.status_id = data.status_id'
+            . ' WHERE statuses.type = ?s AND data.param = ?s AND data.value = ?s LIMIT 1',
+            STATUSES_ORDER, 'odoo_status', $status_from_odoo);
+    }
+
+    /**
+     * Get shipment status by odoo transfer status.
+     *
+     * @param string $status_from_odoo
+     *
+     * @return string|null
+     */
+    protected function getStatusByOdooTransferStatus($status_from_odoo)
+    {
+        return db_get_field('SELECT statuses.status FROM ?:statuses AS statuses'
+            . ' LEFT JOIN ?:status_data AS data ON statuses.status_id = data.status_id WHERE '
+            . 'data.param = ?s AND data.value = ?s LIMIT 1', 'transfer_status', $status_from_odoo);
     }
 
     /**

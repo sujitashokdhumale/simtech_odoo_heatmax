@@ -41,6 +41,10 @@
                         <type>template</type>
                         <default_value>cron_delete.tpl</default_value>
                     </item>
+                    <item id="import_new_odoo_orders">
+                        <type>checkbox</type>
+                        <default_value>Y</default_value>
+                    </item>
                 </items>
             </section>
         </sections>
