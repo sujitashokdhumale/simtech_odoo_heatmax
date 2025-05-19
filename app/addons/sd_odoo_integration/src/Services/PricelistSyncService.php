@@ -53,6 +53,7 @@ class PricelistSyncService
             }
             $company_id = $this->company_id;
             $current_connection = Tygh::$app['addons.sd_odoo_integration.odoo_connect']->getConnection($company_id);
+            $mapping = Helpers::getPricelistMappingVendor($company_id);
             $this->odoo_cron->updateState($this->company_id, OdooEntities::PRICELIST, OdooCronStatus::IN_PROGRESS, $this->start_time);
             date_default_timezone_set('UTC');
             $filter_date = date('Y-m-d H:i:s', $this->last_launch);
@@ -65,11 +66,15 @@ class PricelistSyncService
             while ($chunk_index < $count_chunk) {
                 $offset = $chunk_index * self::ODOO_IMPORT_CHUNK_SIZE;
                 $pricelists = $current_connection->execute('product.pricelist.item', 'search', [[['write_date', '>', $filter_date], ['active', '=', true]]], ['offset' => $offset, 'limit' => self::ODOO_IMPORT_CHUNK_SIZE, 'order' => 'id']);
-                $fields_pricelist = ['product_tmpl_id', 'product_id', 'min_quantity', 'fixed_price', 'compute_price', 'percent_price'];
+                $fields_pricelist = ['product_tmpl_id', 'product_id', 'min_quantity', 'fixed_price', 'compute_price', 'percent_price', 'pricelist_id', 'applied_on'];
                 $pricelists_data = $current_connection->execute('product.pricelist.item', 'read', [$pricelists], ['fields' => $fields_pricelist]);
                 $product_data_for_update_price = [];
                 foreach ($pricelists_data as $item) {
+                    if ($item['applied_on'] !== 'product') {
+                        continue;
+                    }
                     $min_quantity = $item['min_quantity'] == 0 ? 1 : $item['min_quantity'];
+                    $usergroup_id = $mapping[$item['pricelist_id'][0]] ?? 0;
                     if (empty($item['product_id'][0])) {
                         $products_variant = $current_connection->execute('product.template', 'read',
                             [$item['product_tmpl_id'][0]], ['fields' => ['product_variant_ids']]);
@@ -79,7 +84,7 @@ class PricelistSyncService
                                 'price' => $item['fixed_price'],
                                 'lower_limit' => $min_quantity,
                                 'percentage_discount' => $item['compute_price'] == 'percentage' ? $item['percent_price'] : 0,
-                                'usergroup_id' => 0,
+                                'usergroup_id' => $usergroup_id,
                             ];
                         }
                     } else {
@@ -88,16 +93,45 @@ class PricelistSyncService
                             'price' => $item['fixed_price'],
                             'lower_limit' => $min_quantity,
                             'percentage_discount' => $item['compute_price'] == 'percentage' ? $item['percent_price'] : 0,
-                            'usergroup_id' => 0,
+                            'usergroup_id' => $usergroup_id,
                         ];
                     }
                 }
                 $products_id_mapping = Helpers::getProductsIdMappingOdooId(array_column($product_data_for_update_price, 'odoo_product_id'));
                 foreach ($product_data_for_update_price as $key => $item) {
-                    $product_data_for_update_price[$key]['product_id'] = $products_id_mapping[$item['odoo_product_id']];
+                    $product_id = $products_id_mapping[$item['odoo_product_id']] ?? 0;
+                    if (!$product_id) {
+                        unset($product_data_for_update_price[$key]);
+                        continue;
+                    }
+                    $product_data_for_update_price[$key]['product_id'] = $product_id;
                     unset($product_data_for_update_price[$key]['odoo_product_id']);
                 }
-                db_replace_into('product_prices', $product_data_for_update_price, true);
+
+                $grouped = [];
+                foreach ($product_data_for_update_price as $price_data) {
+                    $product_id = $price_data['product_id'];
+                    $usergroup_id = $price_data['usergroup_id'];
+                    $grouped[$product_id][$usergroup_id][] = $price_data;
+                }
+
+                foreach ($grouped as $product_id => $groups) {
+                    foreach ($groups as $usergroup_id => $items) {
+                        $has_base = false;
+                        foreach ($items as $i) {
+                            if ($i['lower_limit'] == 1) {
+                                $has_base = true;
+                                break;
+                            }
+                        }
+                        if ($has_base) {
+                            db_query('DELETE FROM ?:product_prices WHERE product_id = ?i AND usergroup_id = ?i', $product_id, $usergroup_id);
+                        } else {
+                            db_query('DELETE FROM ?:product_prices WHERE product_id = ?i AND usergroup_id = ?i AND lower_limit > 1', $product_id, $usergroup_id);
+                        }
+                        db_replace_into('product_prices', $items, true);
+                    }
+                }
                 ++$chunk_index;
                 if (!defined('CONSOLE')) {
                     fn_set_progress('echo', __('importing_data'));
