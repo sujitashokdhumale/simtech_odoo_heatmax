@@ -62,14 +62,54 @@ if ($mode == 'import') {
     $start_time = time();
     foreach ($companies as $company) {
         date_default_timezone_set('UTC');
+
         $product_sync_service = new ProductSyncService($company, $start_time);
-        $product_sync_service->syncProducts();
+        try {
+            $product_sync_service->syncProducts();
+            fn_log_event('general', 'runtime', [
+                'message' => 'Product sync completed for Company ID: ' . $company['company_id'],
+            ]);
+        } catch (\Exception $e) {
+            fn_log_event('general', 'runtime', [
+                'message' => 'Sync failed: ' . $e->getMessage(),
+            ]);
+        }
+
         $pricelist_sync_service = new PricelistSyncService($company, $start_time);
-        $pricelist_sync_service->syncPricelist();
+        try {
+            $pricelist_sync_service->syncPricelist();
+            fn_log_event('general', 'runtime', [
+                'message' => 'Product sync completed for Company ID: ' . $company['company_id'],
+            ]);
+        } catch (\Exception $e) {
+            fn_log_event('general', 'runtime', [
+                'message' => 'Sync failed: ' . $e->getMessage(),
+            ]);
+        }
+
         $order_sync_service = new OrderSyncService($company, $start_time);
-        $order_sync_service->syncOrders();
+        try {
+            $order_sync_service->syncOrders();
+            fn_log_event('general', 'runtime', [
+                'message' => 'Product sync completed for Company ID: ' . $company['company_id'],
+            ]);
+        } catch (\Exception $e) {
+            fn_log_event('general', 'runtime', [
+                'message' => 'Sync failed: ' . $e->getMessage(),
+            ]);
+        }
+
         $transfer_sync_service = new TransferSyncService($company, $start_time);
-        $transfer_sync_service->syncTransfer();
+        try {
+            $transfer_sync_service->syncTransfer();
+            fn_log_event('general', 'runtime', [
+                'message' => 'Product sync completed for Company ID: ' . $company['company_id'],
+            ]);
+        } catch (\Exception $e) {
+            fn_log_event('general', 'runtime', [
+                'message' => 'Sync failed: ' . $e->getMessage(),
+            ]);
+        }
     }
     fn_log_event('general', 'runtime', [
         'message' => __('sd_odoo_integration.successfully_completed'),
@@ -95,14 +135,55 @@ if ($mode == 'import') {
     $start_time = time();
     foreach ($companies as $company) {
         OdooCron::resetLastLaunch($company['company_id']);
+
         $product_sync_service = new ProductSyncService($company, $start_time);
-        $product_sync_service->syncProducts();
+        try {
+            $product_sync_service->syncProducts();
+            fn_log_event('general', 'runtime', [
+                'message' => 'Product sync completed for Company ID: ' . $company['company_id'],
+            ]);
+        } catch (\Exception $e) {
+            fn_log_event('general', 'runtime', [
+                'message' => 'Sync failed: ' . $e->getMessage(),
+            ]);
+        }
+
         $pricelist_sync_service = new PricelistSyncService($company, $start_time);
-        $pricelist_sync_service->syncPricelist();
+        try {
+            $pricelist_sync_service->syncPricelist();
+            fn_log_event('general', 'runtime', [
+                'message' => 'Product sync completed for Company ID: ' . $company['company_id'],
+            ]);
+        } catch (\Exception $e) {
+            fn_log_event('general', 'runtime', [
+                'message' => 'Sync failed: ' . $e->getMessage(),
+            ]);
+        }
+
         $order_sync_service = new OrderSyncService($company, $start_time);
-        $order_sync_service->syncOrders();
+        try {
+            $order_sync_service->syncOrders();
+            fn_log_event('general', 'runtime', [
+                'message' => 'Product sync completed for Company ID: ' . $company['company_id'],
+            ]);
+        } catch (\Exception $e) {
+            fn_log_event('general', 'runtime', [
+                'message' => 'Sync failed: ' . $e->getMessage(),
+            ]);
+        }
+
         $transfer_sync_service = new TransferSyncService($company, $start_time);
-        $transfer_sync_service->syncTransfer();
+        try {
+            $transfer_sync_service->syncTransfer();
+            fn_log_event('general', 'runtime', [
+                'message' => 'Product sync completed for Company ID: ' . $company['company_id'],
+            ]);
+        } catch (\Exception $e) {
+            fn_log_event('general', 'runtime', [
+                'message' => 'Sync failed: ' . $e->getMessage(),
+            ]);
+        }
+
         fn_log_event('general', 'runtime', [
             'message' => __('sd_odoo_integration.successfully_completed'),
         ]);
