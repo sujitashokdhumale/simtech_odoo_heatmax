@@ -62,8 +62,7 @@ class PricelistSyncService
             if (!defined('CONSOLE')) {
                 fn_set_progress('parts', $count_chunk);
             }
-            $chunk_index = 0;
-            while ($chunk_index < $count_chunk) {
+            for ($chunk_index = 0; $chunk_index < $count_chunk; $chunk_index++) {
                 $offset = $chunk_index * self::ODOO_IMPORT_CHUNK_SIZE;
                 $pricelists = $current_connection->execute('product.pricelist.item', 'search', [[['write_date', '>', $filter_date], ['active', '=', true]]], ['offset' => $offset, 'limit' => self::ODOO_IMPORT_CHUNK_SIZE, 'order' => 'id']);
                 $fields_pricelist = ['product_tmpl_id', 'product_id', 'min_quantity', 'fixed_price', 'compute_price', 'percent_price', 'pricelist_id', 'applied_on'];
@@ -132,7 +131,6 @@ class PricelistSyncService
                         db_replace_into('product_prices', $items, true);
                     }
                 }
-                ++$chunk_index;
                 if (!defined('CONSOLE')) {
                     fn_set_progress('echo', __('importing_data'));
                 }

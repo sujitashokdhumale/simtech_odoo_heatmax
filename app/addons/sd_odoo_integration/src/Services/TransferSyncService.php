@@ -64,8 +64,7 @@ class TransferSyncService
             $transfer_count = $current_connection->execute('stock.picking', 'search_count', [[['write_date', '>', $filter_date], ['sale_id', '!=', false], ['picking_type_code', '=', 'outgoing']]]);
             $count_chunk = ceil($transfer_count / self::ODOO_IMPORT_CHUNK_SIZE);
             $fields_transfers = fn_get_schema('odoo', 'transfer_fields');
-            $chunk_index = 0;
-            while ($chunk_index < $count_chunk) {
+            for ($chunk_index = 0; $chunk_index < $count_chunk; $chunk_index++) {
                 $offset = $chunk_index * self::ODOO_IMPORT_CHUNK_SIZE;
                 $transfers = $current_connection->execute('stock.picking', 'search', [[['write_date', '>', $filter_date], ['sale_id', '!=', false], ['picking_type_code', '=', 'outgoing']]], ['offset' => $offset, 'limit' => self::ODOO_IMPORT_CHUNK_SIZE, 'order' => 'id']);
                 $transfers_data = $current_connection->execute('stock.picking', 'read', [$transfers], ['fields' => $fields_transfers]);
@@ -96,7 +95,6 @@ class TransferSyncService
                         $result = fn_update_shipment($data, $data['shipment_id']);
                     }
                 }
-                ++$chunk_index;
             }
             $this->odoo_cron->updateState($this->company_id, OdooEntities::TRANSFER, OdooCronStatus::SUCCESS, $this->start_time);
             return $result;
