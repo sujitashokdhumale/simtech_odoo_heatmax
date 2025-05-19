@@ -78,6 +78,10 @@ class Bootstrap implements BootstrapInterface, HookHandlerProviderInterface
                 'addons.sd_odoo_integration.hook_handlers.cart',
                 'getStatusesPost',
             ],
+            'update_company_pre' => [
+                'addons.sd_odoo_integration.hook_handlers.company',
+                'onUpdateCompanyPre',
+            ],
         ];
 
         return $hooks;

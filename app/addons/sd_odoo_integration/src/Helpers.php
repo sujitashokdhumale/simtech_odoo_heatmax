@@ -189,4 +189,19 @@ class Helpers
 
         return (int) $shipment_id ?? false;
     }
+
+    /**
+     * Gets vendor-specific pricelist mapping.
+     *
+     * @param int $company_id Company ID
+     *
+     * @return array<string, int>
+     */
+    public static function getPricelistMappingVendor($company_id)
+    {
+        $mapping_json = db_get_field('SELECT odoo_pricelist_mapping FROM ?:companies WHERE company_id = ?i', $company_id);
+        $mapping = json_decode($mapping_json, true);
+
+        return is_array($mapping) ? $mapping : [];
+    }
 }

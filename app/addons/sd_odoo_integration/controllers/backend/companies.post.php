@@ -15,6 +15,14 @@ use Tygh\Registry;
 use Tygh\Tygh;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_REQUEST['odoo_pricelist_names'], $_REQUEST['odoo_pricelist_usergroups'])) {
+        $mapping = array_combine((array) $_REQUEST['odoo_pricelist_names'], (array) $_REQUEST['odoo_pricelist_usergroups']);
+        $mapping = array_filter($mapping, static function ($ug_id, $name) {
+            return $name !== '' && $ug_id !== '';
+        }, ARRAY_FILTER_USE_BOTH);
+        $_REQUEST['company_data']['odoo_pricelist_mapping'] = json_encode($mapping);
+    }
+
     return [CONTROLLER_STATUS_OK];
 }
 
@@ -38,5 +46,17 @@ if (
         'odoo_cron_status_names' => $odoo_cron_status_names,
         'available_shippings' => $available_shippings,
         'statistic_cron' => $statistic_cron,
+    ]);
+
+    $mapping_json = db_get_field('SELECT odoo_pricelist_mapping FROM ?:companies WHERE company_id = ?i', $_REQUEST['company_id']);
+    $odoo_pricelist_mapping = json_decode($mapping_json, true);
+    if (!is_array($odoo_pricelist_mapping)) {
+        $odoo_pricelist_mapping = [];
+    }
+    $odoo_usergroups = db_get_array("SELECT usergroup_id, usergroup FROM ?:usergroups WHERE type = 'C'");
+
+    Tygh::$app['view']->assign([
+        'odoo_pricelist_mapping' => $odoo_pricelist_mapping,
+        'odoo_usergroups' => $odoo_usergroups,
     ]);
 }

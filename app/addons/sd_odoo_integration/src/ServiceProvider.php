@@ -15,6 +15,7 @@ use Pimple\ServiceProviderInterface;
 use Tygh\Addons\SdOdooIntegration\HookHandlers\CartHookHandler;
 use Tygh\Addons\SdOdooIntegration\HookHandlers\CustomerHookHandler;
 use Tygh\Addons\SdOdooIntegration\HookHandlers\ProductHookHandler;
+use Tygh\Addons\SdOdooIntegration\HookHandlers\CompanyHookHandler;
 use Tygh\Application;
 
 /**
@@ -33,6 +34,9 @@ class ServiceProvider implements ServiceProviderInterface
         };
         $app['addons.sd_odoo_integration.hook_handlers.cart'] = function (Application $app) {
             return new CartHookHandler($app);
+        };
+        $app['addons.sd_odoo_integration.hook_handlers.company'] = static function (Application $app) {
+            return new CompanyHookHandler($app);
         };
         $app['addons.sd_odoo_integration.hook_handlers.customer'] = function (Application $app) {
             return new CustomerHookHandler($app);
