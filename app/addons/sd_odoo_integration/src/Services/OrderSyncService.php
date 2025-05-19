@@ -80,9 +80,8 @@ class OrderSyncService
             }
             $orders_fields = fn_get_schema('odoo', 'odoo_order_fields');
             $order_line_fields = ['product_id', 'product_uom_qty', 'price_unit'];
-            $chunk_index = 0;
             $orders_count_check = 0;
-            while ($chunk_index < $count_chunk) {
+            for ($chunk_index = 0; $chunk_index < $count_chunk; $chunk_index++) {
                 $offset = $chunk_index * self::ODOO_IMPORT_CHUNK_SIZE;
                 $orders = $current_connection->execute(
                     'sale.order',
@@ -188,7 +187,6 @@ class OrderSyncService
                         ++$orders_count_check;
                     }
                 }
-                ++$chunk_index;
                 if (!defined('CONSOLE')) {
                     fn_set_progress('echo', __('importing_data'));
                 }

@@ -55,13 +55,11 @@ class DeletingService
         $current_connection = Tygh::$app['addons.sd_odoo_integration.odoo_connect']->getConnection($this->company_id);
         $products_count = $current_connection->execute('product.product', 'search_count', [[]]);
         $count_chunk = ceil($products_count / self::ODOO_CHUNK_SIZE_DELETING);
-        $chunk_index = 0;
         $all_odoo_id_product = [];
-        while ($chunk_index < $count_chunk) {
+        for ($chunk_index = 0; $chunk_index < $count_chunk; $chunk_index++) {
             $offset = $chunk_index * self::ODOO_CHUNK_SIZE_DELETING;
             $product_odoo_ids = $current_connection->execute('product.product', 'search', [[]], ['offset' => $offset, 'limit' => self::ODOO_CHUNK_SIZE_DELETING, 'order' => 'id']);
             $all_odoo_id_product = array_merge($all_odoo_id_product, $product_odoo_ids);
-            ++$chunk_index;
         }
         $products_for_deleting = self::getProductsNotInOdoo($all_odoo_id_product);
         if ($products_for_deleting) {
@@ -78,13 +76,11 @@ class DeletingService
         $current_connection = Tygh::$app['addons.sd_odoo_integration.odoo_connect']->getConnection($this->company_id);
         $products_count = $current_connection->execute('sale.order', 'search_count', [[]]);
         $count_chunk = ceil($products_count / self::ODOO_CHUNK_SIZE_DELETING);
-        $chunk_index = 0;
         $all_odoo_id_order = [];
-        while ($chunk_index < $count_chunk) {
+        for ($chunk_index = 0; $chunk_index < $count_chunk; $chunk_index++) {
             $offset = $chunk_index * self::ODOO_CHUNK_SIZE_DELETING;
             $order_odoo_ids = $current_connection->execute('sale.order', 'search', [[]], ['offset' => $offset, 'limit' => self::ODOO_CHUNK_SIZE_DELETING, 'order' => 'id']);
             $all_odoo_order_ids = array_merge($all_odoo_id_order, $order_odoo_ids);
-            ++$chunk_index;
         }
         $orders_for_deleting = self::getOrdersNotInOdoo($all_odoo_order_ids);
         if ($orders_for_deleting) {

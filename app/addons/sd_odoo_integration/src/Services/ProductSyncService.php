@@ -65,10 +65,9 @@ class ProductSyncService
             if (!defined('CONSOLE')) {
                 fn_set_progress('parts', $count_chunk);
             }
-            $chunk_index = 0;
             $products_count_check = 0;
             $products = $products_data = $add_products = $update_products = [];
-            while ($chunk_index < $count_chunk) {
+            for ($chunk_index = 0; $chunk_index < $count_chunk; $chunk_index++) {
                 $products_chunk_count_check = 0;
                 $offset = $chunk_index * self::ODOO_IMPORT_CHUNK_SIZE;
                 $products = $current_connection->execute('product.product', 'search', [[['write_date', '>', $filter_date], ['sale_ok', '=', 1]]], ['offset' => $offset, 'limit' => self::ODOO_IMPORT_CHUNK_SIZE, 'order' => 'id']);
@@ -173,7 +172,6 @@ class ProductSyncService
                     $result = false;
                     throw new OdooException('The number of products in a chunk is different from the amount of data');
                 }
-                ++$chunk_index;
                 if (!defined('CONSOLE')) {
                     fn_set_progress('echo', __('importing_data'));
                 }
