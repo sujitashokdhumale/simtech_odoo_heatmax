@@ -231,3 +231,7 @@ msgstr "Last status"
 msgctxt "Languages::sd_odoo_integration.odoo_error_create_product_double_sku"
 msgid "More than one product with this SKU was found in odoo, please check the SKU in the product"
 msgstr "More than one product with this SKU was found in odoo, please check the SKU in the product"
+
+msgctxt "Languages::sd_odoo_integration.import_new_odoo_orders"
+msgid "Import new orders from Odoo"
+msgstr "Import new orders from Odoo"
