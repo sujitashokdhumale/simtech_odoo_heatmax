@@ -45,6 +45,10 @@
                         <type>checkbox</type>
                         <default_value>Y</default_value>
                     </item>
+                    <item id="allow_delete_product_odoo">
+                        <type>checkbox</type>
+                        <default_value>N</default_value>
+                    </item>
                 </items>
             </section>
         </sections>

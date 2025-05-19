@@ -235,3 +235,8 @@ msgstr "More than one product with this SKU was found in odoo, please check the 
 msgctxt "Languages::sd_odoo_integration.import_new_odoo_orders"
 msgid "Import new orders from Odoo"
 msgstr "Import new orders from Odoo"
+
+msgctxt "Languages::sd_odoo_integration.allow_delete_product_odoo"
+msgid "Allow product deletion in Odoo from CS-Cart?"
+msgstr "Allow product deletion in Odoo from CS-Cart?"
+
