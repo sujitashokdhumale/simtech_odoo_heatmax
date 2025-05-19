@@ -11,6 +11,7 @@
 namespace Tygh\Addons\SdOdooIntegration;
 
 use \Ripcord\Ripcord;
+use Ripcord\Client\Transport\Stream;
 use Tygh\Addons\SdOdooIntegration\Exceptions\OdooException;
 
 class OdooConnection
@@ -31,9 +32,11 @@ class OdooConnection
         $this->password = $password;
         $this->db = $db;
 
-        $common = Ripcord::client("$url/xmlrpc/2/common");
+        $stream = new Stream(['http' => ['timeout' => 30]]);
+
+        $common = Ripcord::client("$url/xmlrpc/2/common", null, $stream);
         $this->uid = $common->authenticate($db, $login, $password, []);
-        $this->client = Ripcord::client("$url/xmlrpc/2/object");
+        $this->client = Ripcord::client("$url/xmlrpc/2/object", null, $stream);
         $this->start_time = TIME;
         $this->company_id = $company_id;
     }
