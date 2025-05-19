@@ -1,0 +1,233 @@
+msgid ""
+msgstr "Project-Id-Version: tygh"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: English\n"
+"Language: en_US"
+
+msgctxt "Addons::name::sd_odoo_integration"
+msgid "Simtech Development: Odoo integration"
+msgstr "Simtech Development: Odoo integration"
+
+msgctxt "Addons::description::sd_odoo_integration"
+msgid "Adds synchronization with the Odoo system. <a href=\"https://www.simtechdev.com/\" target=\"_blank\">Support</a>"
+msgstr "Adds synchronization with the Odoo system. <a href=\"https://www.simtechdev.com/\" target=\"_blank\">Support</a>"
+
+msgctxt "SettingsOptions::sd_odoo_integration::odoo_default_discount_product"
+msgid "Default SKU product for discount"
+msgstr "Default SKU product for discount"
+
+msgctxt "Languages::sd_odoo_integration.odoo_import_product"
+msgid "<a class=\"cm-ajax cm-comet btn btn-primary\" href=\"[import_url]\">Import product from Odoo</a>"
+msgstr "<a class=\"cm-ajax cm-comet btn btn-primary\" href=\"[import_url]\">Import product from Odoo</a>"
+
+msgctxt "Languages::sd_odoo_integration.running_another_cron"
+msgid "Running_another_cron, start time [start_time]"
+msgstr "Running_another_cron, start time [start_time]"
+
+msgctxt "Languages::sd_odoo_integration.successfully_completed"
+msgid "Successfully completed"
+msgstr "Successfully completed"
+
+msgctxt "Languages::sd_odoo_integration.cron_odoo_error"
+msgid "Error odoo integration company #[company_id] : [error]"
+msgstr "Error odoo integration company #[company_id] : [error]"
+
+msgctxt "Languages::sd_odoo_integration.odoo_product_id"
+msgid "Odoo product id (variants)"
+msgstr "Odoo product id (variants)"
+
+msgctxt "Languages::sd_odoo_integration.import_all_product_from_odoo"
+msgid "Import of all products from Odoo"
+msgstr "Import of all products from Odoo"
+
+msgctxt "Languages::sd_odoo_integration.clear_status_in_cron"
+msgid "Clear status in cron Odoo"
+msgstr "Clear status in cron Odoo"
+
+msgctxt "Languages::sd_odoo_integration.default_category"
+msgid "Category for new products from Odoo"
+msgstr "Category for new products from Odoo"
+
+msgctxt "Languages::sd_odoo_integration.default_category_tooltip"
+msgid "Category in which all new products will be created from"
+msgstr "Category in which all new products will be created from"
+
+msgctxt "Languages::sd_odoo_integration.cron_odoo_error_add_product"
+msgid "Error cron odoo add product #[odoo_product_id]"
+msgstr "Error cron odoo add product #[odoo_product_id]"
+
+msgctxt "Languages::sd_odoo_integration.cron_odoo_error_update_product"
+msgid "Error cron odoo update product #[product_id]"
+msgstr "Error cron odoo update product #[product_id]"
+
+msgctxt "Languages::sd_odoo_integration.odoo_order_id"
+msgid "Sale order id in odoo"
+msgstr "Sale order id in odoo"
+
+msgctxt "Languages::sd_odoo_integration.cron_info"
+msgid "You can set up a cron job to import data from the odoo. The recommended time to run the task is once every 30 minutes."
+msgstr "You can set up a cron job to import data from the odoo. The recommended time to run the task is once every 30 minutes."
+
+msgctxt "Languages::sd_odoo_integration.odoo_api_key"
+msgid "Odoo developer api key in odoo"
+msgstr "Odoo developer api key in odoo"
+
+msgctxt "Languages::sd_odoo_integration.odoo_user_email"
+msgid "Odoo email account for integrations in odoo"
+msgstr "Odoo email account for integrations in odoo"
+
+msgctxt "Languages::sd_odoo_integration.odoo_database"
+msgid "Odoo database"
+msgstr "Odoo database"
+
+msgctxt "Languages::sd_odoo_integration.odoo_url"
+msgid "Odoo url system"
+msgstr "Odoo url system"
+
+msgctxt "Languages::sd_odoo_integration.cron_odoo_empty_default_category"
+msgid "The default category is not filled in the module Simtech Development: Odoo integration"
+msgstr "The default category is not filled in the module Simtech Development: Odoo integration"
+
+msgctxt "Languages::sd_odoo_integration.odoo_error_delete_order"
+msgid "An error occurred while deleting an order in odoo"
+msgstr "An error occurred while deleting an order in odoo"
+
+msgctxt "Languages::sd_odoo_integration.odoo_statuses"
+msgid "Odoo order status"
+msgstr "Odoo order status"
+
+msgctxt "Languages::sd_odoo_integration.odoo_transfer_statuses"
+msgid "Odoo transfer status"
+msgstr "Odoo transfer status"
+
+msgctxt "Languages::sd_odoo_integration.odoo_state_draft"
+msgid "Draft (Quotation)"
+msgstr "Draft (Quotation)"
+
+msgctxt "Languages::sd_odoo_integration.odoo_state_sent"
+msgid "Draft (Quotation sent)"
+msgstr "Draft (Quotation sent)"
+
+msgctxt "Languages::sd_odoo_integration.odoo_state_sale"
+msgid "Sale (Sales Order)"
+msgstr "Sale (Sales Order)"
+   
+msgctxt "Languages::sd_odoo_integration.odoo_state_done"
+msgid "Done (Locked)"
+msgstr "Done (Locked)"
+            
+msgctxt "Languages::sd_odoo_integration.odoo_state_cancel"
+msgid "Cancel (Cancelled)"
+msgstr "Cancel (Cancelled)"
+
+msgctxt "Languages::sd_odoo_integration.odoo_state_assigned"
+msgid "Ready (Assigned)"
+msgstr "Ready (Assigned)"
+
+msgctxt "Languages::sd_odoo_integration.odoo_state_confirmed"
+msgid "Waiting (Confirmed)"
+msgstr "Waiting (Confirmed)"
+
+msgctxt "Languages::sd_odoo_integration.cron_is_broken"
+msgid "Odoo cron job: Something is broken by company #[company_id]."
+msgstr "Odoo cron job: Something is broken by company #[company_id]."
+
+msgctxt "Languages::sd_odoo_integration.odoo_discount_product"
+msgid "Default SKU odoo product discount"
+msgstr "Default SKU odoo product discount"
+
+msgctxt "Languages::sd_odoo_integration.odoo_error_delete_product"
+msgid "Failed to delete product in Odoo, see logs for details"
+msgstr "Failed to delete product in Odoo, see logs for details"
+
+msgctxt "Languages::sd_odoo_integration.odoo_error_update_product"
+msgid "Failed to update or create product in Odoo, see logs for details"
+msgstr "Failed to update or create product in Odoo, see logs for details"
+
+msgctxt "Languages::sd_odoo_integration.odoo_error"
+msgid "Error odoo integration : [error]"
+msgstr "Error odoo integration : [error]"
+
+msgctxt "Languages::sd_odoo_integration.not_shipments_available"
+msgid "There are no shipments available for this vendor"
+msgstr "There are no shipments available for this vendor"
+
+msgctxt "Languages::sd_odoo_integration.cron_delete_info"
+msgid "To remove entities from the system, you must use a separate cron job. An example command is shown below. Recommended time to run the task once per hour."
+msgstr "To remove entities from the system, you must use a separate cron job. An example command is shown below. Recommended time to run the task once per hour."
+
+msgctxt "Languages::sd_odoo_integration.check_connection_to_odoo"
+msgid "Checking the connection to the ODOO"
+msgstr "Checking the connection to the ODOO"
+
+msgctxt "Languages::sd_odoo_integration.noop"
+msgid "Waiting for the first cron run"
+msgstr "Waiting for the first cron run"
+
+msgctxt "Languages::sd_odoo_integration.in_progress"
+msgid "In progress"
+msgstr "In progress"
+
+msgctxt "Languages::sd_odoo_integration.success"
+msgid "Success"
+msgstr "Success"
+
+msgctxt "Languages::sd_odoo_integration.fail"
+msgid "Fail"
+msgstr "Fail"
+
+msgctxt "Languages::sd_odoo_integration.failed_connection"
+msgid "Fail : Check the correctness of the specified data in the first four paragraphs and save the settings."
+msgstr "Fail : Check the correctness of the specified data in the first four paragraphs and save the settings."
+
+msgctxt "Languages::sd_odoo_integration.order"
+msgid "Orders"
+msgstr "Orders"
+
+msgctxt "Languages::sd_odoo_integration.product"
+msgid "Products"
+msgstr "Products"
+
+msgctxt "Languages::sd_odoo_integration.pricelist"
+msgid "Pricelists"
+msgstr "Pricelists"
+
+msgctxt "Languages::sd_odoo_integration.transfer"
+msgid "Transfers (shipments)"
+msgstr "Transfers (shipments)"
+
+msgctxt "Languages::sd_odoo_integration.odoo_shipment_import_sku"
+msgid "Default shipment for import orders"
+msgstr "Default shipment for import orders"
+
+msgctxt "Languages::sd_odoo_integration.odoo_shipment_import_sku"
+msgid "Default shipment for import orders"
+msgstr "Default shipment for import orders"
+
+msgctxt "Languages::sd_odoo_integration.odoo_shipment_method_id"
+msgid "Default ID Shipping Methods in odoo for export orders"
+msgstr "Default ID Shipping Methods in odoo for export orders"
+
+msgctxt "Languages::sd_odoo_integration.reset_status_cron"
+msgid "Reset broken cron"
+msgstr "Reset broken cron"
+
+msgctxt "Languages::sd_odoo_integration.no_data_cron"
+msgid "The first cron run is expected, at which the data will be fully imported."
+msgstr "The first cron run is expected, at which the data will be fully imported."
+
+msgctxt "Languages::sd_odoo_integration.entites"
+msgid "Entites"
+msgstr "Entites"
+
+msgctxt "Languages::sd_odoo_integration.last_succes_launch"
+msgid "Last succes launch"
+msgstr "Last succes launch"
+
+msgctxt "Languages::sd_odoo_integration.last_status"
+msgid "Last status"
+msgstr "Last status"
+
+msgctxt "Languages::sd_odoo_integration.odoo_error_create_product_double_sku"
+msgid "More than one product with this SKU was found in odoo, please check the SKU in the product"
+msgstr "More than one product with this SKU was found in odoo, please check the SKU in the product"

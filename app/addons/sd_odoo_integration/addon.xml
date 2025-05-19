@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<addon scheme="4.0">
+    <id>sd_odoo_integration</id>
+    <version>4.14.3</version>
+    <priority>7000</priority>
+    <position>1</position>
+    <status>active</status>
+    <has_icon>Y</has_icon>
+    <default_language>en</default_language>
+    <supplier>Simtech Development</supplier>
+    <supplier_link>https://www.simtechdev.com</supplier_link>
+    <compatibility>
+        <core_version>
+            <min>4.14.3</min>
+        </core_version>
+        <core_edition>
+            ULTIMATE,MULTIVENDOR
+        </core_edition>
+    </compatibility>
+    <settings edition_type="ROOT,STOREFRONT">
+        <sections>
+            <section id="general">
+                <items>
+                    <item id="odoo_default_category">
+                        <type>hidden</type>
+                        <default_value></default_value>
+                    </item>
+                    <item id="odoo_import_product">
+                        <type>template</type>
+                        <default_value>button_import.tpl</default_value>
+                    </item>
+                    <item id="odoo_select_default_category">
+                        <type>template</type>
+                        <default_value>settings.tpl</default_value>
+                    </item>
+                    <item id="cron_command_link">
+                        <type>template</type>
+                        <default_value>cron.tpl</default_value>
+                    </item>
+                    <item id="cron_delete_command_link">
+                        <type>template</type>
+                        <default_value>cron_delete.tpl</default_value>
+                    </item>
+                </items>
+            </section>
+        </sections>
+    </settings>
+    <autoload>
+        <psr4 prefix="Tygh\Addons\SdOdooIntegration\">src</psr4>
+        <psr4 prefix="Ripcord\">lib/vendor/darkaonline/ripcord/src/Ripcord</psr4>
+    </autoload>
+    <bootstrap>\Tygh\Addons\SdOdooIntegration\Bootstrap</bootstrap>
+    <queries>
+        <item>DROP TABLE IF EXISTS `?:cron_odoo_states`</item>
+        <item for="install">
+            CREATE TABLE ?:cron_odoo_states (
+                type_entity char(2),
+                company_id int(11) unsigned not null default 0,
+                last_launch int(11) unsigned not null default 0,
+                last_status char(1) not null default 'X',
+                current_status char(1) not null default 'X',
+                PRIMARY KEY (type_entity, company_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=UTF8
+        </item>
+        <item for="install">ALTER TABLE ?:companies ADD odoo_url text</item>
+        <item for="install">ALTER TABLE ?:companies ADD odoo_database text</item>
+        <item for="install">ALTER TABLE ?:companies ADD odoo_username text</item>
+        <item for="install">ALTER TABLE ?:companies ADD odoo_api_key text</item>
+        <item for="install">ALTER TABLE ?:companies ADD odoo_discount_product text</item>
+        <item for="install">ALTER TABLE ?:companies ADD odoo_shipment_import_id mediumint(8) unsigned NOT NULL default '0'</item>
+        <item for="install">ALTER TABLE ?:companies ADD odoo_shipment_method_id mediumint(8) unsigned NOT NULL default '0'</item>
+        <item for="install">ALTER TABLE ?:products ADD odoo_product_id mediumint(8) unsigned NOT NULL default '0'</item>
+        <item for="install">ALTER TABLE ?:orders ADD odoo_order_id mediumint(8) unsigned NOT NULL default '0'</item>
+        <item for="install">CREATE INDEX idx_odoo_order_id ON ?:orders (odoo_order_id);</item>
+        <item for="uninstall">ALTER TABLE ?:companies DROP COLUMN odoo_url</item>
+        <item for="uninstall">ALTER TABLE ?:companies DROP COLUMN odoo_database</item>
+        <item for="uninstall">ALTER TABLE ?:companies DROP COLUMN odoo_username</item>
+        <item for="uninstall">ALTER TABLE ?:companies DROP COLUMN odoo_api_key</item>
+        <item for="uninstall">ALTER TABLE ?:companies DROP COLUMN odoo_discount_product</item>
+        <item for="uninstall">ALTER TABLE ?:companies DROP COLUMN odoo_shipment_import_id</item>
+        <item for="uninstall">ALTER TABLE ?:companies DROP COLUMN odoo_shipment_method_id</item>
+        <item for="uninstall">ALTER TABLE ?:products DROP COLUMN odoo_product_id</item>
+        <item for="uninstall">ALTER TABLE ?:orders DROP COLUMN odoo_order_id</item>
+        <item for="uninstall">DROP INDEX idx_odoo_order_id ON ?:orders;</item>
+    </queries>
+</addon>
